@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 6071101514713711812}
   - component: {fileID: 8771743123495295504}
   - component: {fileID: 4318784979804648787}
+  - component: {fileID: 7029955891685310059}
+  - component: {fileID: 6927243566933334367}
   m_Layer: 0
   m_Name: Tree
   m_TagString: Untagged
@@ -120,7 +122,7 @@ BoxCollider2D:
   m_Offset: {x: -0.0033880472, y: -0.09287861}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.51224303, y: 0.12986001}
+    pivot: {x: 0.5, y: 0.13}
     oldSize: {x: 1.84375, y: 2.78125}
     newSize: {x: 1.84375, y: 2.78125}
     adaptiveTilingThreshold: 0.5
@@ -130,3 +132,39 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5199759, y: 0.5365891}
   m_EdgeRadius: 0
+--- !u!114 &7029955891685310059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5160205611179762537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cfc68a406c394a40bdd516f1dcdb330, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 3
+  woodPrefab: {fileID: 5732448288404292236, guid: be4f411fa1bb64839966b04d3b7ceb3c, type: 3}
+  stumpPrefab: {fileID: 1875176643337160207, guid: 56dfdbb494d2b43e1afec3e367e613d3, type: 3}
+--- !u!95 &6927243566933334367
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5160205611179762537}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5a86f7de8c26e42389fe6767230600e9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

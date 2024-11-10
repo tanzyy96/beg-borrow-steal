@@ -4,56 +4,57 @@ using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
-    public GameObject inventoryPanel;
     public Player player;
     public List<SlotUI> slots = new List<SlotUI>();
 
+    public GameObject slotsGrid;
+    public GameObject slotPrefab;
+
     void Start()
     {
-        inventoryPanel.SetActive(false);
+        for (int i = 0; i < player.inventory.MaxSlots; i++)
+        {
+            SlotUI slotUI = Instantiate(slotPrefab, slotsGrid.transform).GetComponent<SlotUI>();
+            slots.Add(slotUI);
+            slots[i].SetEmpty();
+        }
     }
-    // Update is called once per frame
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            ToggleInventory();
-        }
-
-    }
-
-    public void ToggleInventory()
-    {
         SyncInventory();
-        inventoryPanel.SetActive(!inventoryPanel.activeSelf);
     }
 
     void SyncInventory()
     {
-        if (slots.Count != player.inventory.slots.Count) return; // something went wrong lol
+        // Clear all slots
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].SetEmpty();
+        }
 
+        // Add items to slots
         for (int i = 0; i < player.inventory.slots.Count; i++)
         {
-            if (player.inventory.slots[i].itemName != "")
+            if (player.inventory.slots[i].item != null)
             {
-                slots[i].SetItem(player.inventory.slots[i]);
-            }
-            else
-            {
-                slots[i].SetEmpty();
+                if (i < slots.Count)
+                {
+                    slots[i].SetItem(player.inventory.slots[i].item, player.inventory.slots[i].quantity);
+                }
             }
         }
     }
 
     public void Remove(int slotIndex)
     {
-        Item itemToRemove = GameManager.instance.itemManager.GetItemByName(player.inventory.slots[slotIndex].itemName);
-        if (itemToRemove != null)
-        {
-            Debug.Log("Removing item");
-            player.DropItem(itemToRemove);
-            player.inventory.slots[slotIndex].RemoveItem();
-            SyncInventory();
-        }
+        // Item itemToRemove = GameManager.instance.itemManager.GetItemByName(player.inventory.slots[slotIndex].itemName);
+        // if (itemToRemove != null)
+        // {
+        //     Debug.Log("Removing item");
+        //     // player.DropItem(itemToRemove);
+        //     player.inventory.slots[slotIndex].RemoveItem();
+        //     SyncInventory();
+        // }
     }
 }

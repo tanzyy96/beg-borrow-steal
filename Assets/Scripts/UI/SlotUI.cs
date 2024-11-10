@@ -9,26 +9,22 @@ public class SlotUI : MonoBehaviour
     public Image itemIcon;
     public TextMeshProUGUI quantityText;
 
-    public void SetItem(Inventory.Slot slot)
+    public void SetItem(Item item, int quantity)
     {
-        if (slot != null)
+        if (item != null)
         {
-            itemIcon.sprite = slot.icon;
-            itemIcon.color = new Color(1, 1, 1, 1); // make visible?
-            // Scale up the icon by .2x
-            itemIcon.rectTransform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
-
-            quantityText.text = slot.quantity.ToString();
+            itemIcon.sprite = item.icon;
+            itemIcon.color = new Color(1, 1, 1, 1);
+            quantityText.text = quantity.ToString();
         }
     }
 
     public void SetEmpty()
     {
         itemIcon.sprite = null;
-        itemIcon.color = new Color(1, 1, 1, 0); // make invisible
+        itemIcon.color = new Color(1, 1, 1, 0);
         quantityText.text = "";
-        // Reset the icon scale
-        itemIcon.rectTransform.localScale = new Vector3(1, 1, 1);
+
     }
 
 }

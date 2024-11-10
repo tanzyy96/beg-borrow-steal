@@ -20,10 +20,10 @@ public class ItemManager : MonoBehaviour
 
     void AddItem(Item item)
     {
-        if (!itemMap.ContainsKey(item.data.name))
-        {
-            itemMap.Add(item.data.itemName, item);
-        }
+        // if (!itemMap.ContainsKey(item.data.name))
+        // {
+        //     itemMap.Add(item.data.itemName, item);
+        // }
 
     }
 

@@ -11,7 +11,7 @@ public enum Side
 public class Player : MonoBehaviour
 {
     public int damage = 1;
-    public float interactionRange = 0.7f;
+    public float interactionRange = 1.2f;
 
     public Inventory inventory;
     public Animator animator; // Can think about whether want to split this into its own file
@@ -35,30 +35,43 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void DropItem(Item item)
-    {
-        Vector3 spawnLocation = transform.position;
-
-        Vector3 spawnOffset = Random.insideUnitCircle * 1.25f;
-
-        // Create item
-        Item droppedItem = Instantiate(item, spawnLocation + spawnOffset, Quaternion.identity);
-
-        // Add force to item
-        droppedItem.rb.AddForce(spawnOffset * 0.2f, ForceMode2D.Impulse);
-
-    }
+    // public void DropItem(Item item)
+    // {
+    //     Vector3 spawnLocation = transform.position;
+    //
+    //     Vector3 spawnOffset = Random.insideUnitCircle * 1.25f;
+    //
+    //     // Create item
+    //     Item droppedItem = Instantiate(item, spawnLocation + spawnOffset, Quaternion.identity);
+    //
+    //     // Add force to item
+    //     droppedItem.rb.AddForce(spawnOffset * 0.2f, ForceMode2D.Impulse);
+    //
+    // }
 
     // Try to interact with interactables in range
     // This is fired every frame when the player is holding down the space bar
     public void TryToInteract()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, interactionRange);
+        // Log the number of colliders in range
         foreach (Collider2D collider in colliders)
         {
             Interactable interactable = collider.GetComponent<Interactable>();
-            if (interactable != null && isFacing(interactable.transform.position))
+            if (interactable != null)
             {
+                // Check if player must face the interactable to interact with it
+                if (interactable.mustFaceToInteract && !isFacing(interactable.transform.position))
+                {
+                    return;
+                }
+
+                // Prevent interacting with multiple interactables at once
+                if (currentInteractable != null && currentInteractable != interactable)
+                {
+                    continue;
+                }
+
                 interactable.Interact(this);
                 currentInteractable = interactable;
                 return; // Stop after first interaction

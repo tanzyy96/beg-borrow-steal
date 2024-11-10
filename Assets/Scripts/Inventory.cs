@@ -8,92 +8,88 @@ public class Inventory
     [System.Serializable]
     public class Slot
     {
-        public string itemName; // Null if empty
+        public Item item;
         public int quantity;
-        public int maxQuantity;
-        public Sprite icon;
 
         public Slot()
         {
-            itemName = "";
+            this.item = null;
             quantity = 0;
-            maxQuantity = 99;
         }
 
-        public Slot(string itemName, int quantity, int maxQuantity)
+        public Slot(Item item, int quantity)
         {
-            this.itemName = itemName;
+            this.item = item;
             this.quantity = quantity;
-            this.maxQuantity = maxQuantity;
-        }
-
-        public bool CanAddItems(int quantity = 1)
-        {
-            return this.quantity + quantity <= maxQuantity;
         }
 
         public void AddItems(Item item, int quantity = 1)
         {
-            this.itemName = item.data.itemName;
-            this.icon = item.data.icon;
-            this.quantity += quantity;
-
-            // If quantity exceeds max, leak resources and set to max
-            if (this.quantity > maxQuantity)
+            if (this.item == null)
             {
-                Debug.LogError("Quantity exceeds max quantity for slot! Should check CanAddItems() first.");
-                this.quantity = maxQuantity;
+                this.item = item;
+            }
+            if (this.item.itemName != item.itemName)
+            {
+                Debug.LogError("Item name does not match slot item name! Should check CanAddItems() first.");
+                return;
+            }
+
+            this.quantity += quantity;
+        }
+
+        public void RemoveItem(int quantity = 1)
+        {
+            this.quantity -= 1;
+            if (this.quantity <= 0)
+            {
+                this.ClearSlot();
             }
         }
 
-        public void RemoveItem()
+        public void ClearSlot()
         {
-            this.quantity--;
-            if (this.quantity <= 0)
-            {
-                this.itemName = "";
-                this.icon = null;
-                this.quantity = 0;
-            }
+            this.item = null;
+            this.quantity = 0;
         }
     }
 
     public List<Slot> slots = new List<Slot>();
-    public const int MaxSlots = 20;
-
-    public Inventory(int numSlots = MaxSlots)
-    {
-        for (int i = 0; i < numSlots; i++)
-        {
-            Slot emptySlot = new Slot();
-            slots.Add(emptySlot);
-        }
-    }
+    public int MaxSlots = 5;
 
     public void Add(Item item, int quantity = 1)
     {
-        Slot slot = slots.Find(s => s.itemName == item.data.itemName);
+        Slot slot = slots.Find(s => s.item.itemName == item.itemName);
 
-        if (slot != null && slot.CanAddItems(quantity))
+        if (slot != null)
         {
             slot.AddItems(item, quantity);
         }
-        // If slot exists but can't add items, add to another slot
-        // TODO: handle hitting slots max quantity
         else
         {
-            Slot emptySlot = slots.Find(s => s.itemName == "");
-            if (emptySlot != null)
-            {
-                emptySlot.AddItems(item, quantity);
-            }
+            Slot newSlot = new Slot(item, quantity);
+            slots.Add(newSlot);
         }
-        // TODO: handle case where no more slots and no existing slot for this type
-        // e.g. don't pick up item and show warning to player
     }
 
-    public void Remove(int index)
+    public bool HasItems(string itemName, int quantity)
     {
-        slots[index].RemoveItem();
+        Slot slot = slots.Find(s => s.item.itemName == itemName);
+
+        return (slot != null && slot.quantity >= quantity);
+    }
+
+    public void Remove(string itemName, int quantity = 1)
+    {
+        Slot slot = slots.Find(s => s.item.itemName == itemName);
+
+        if (slot != null && slot.quantity >= quantity)
+        {
+            slot.RemoveItem(quantity);
+        }
+        else
+        {
+            Debug.LogError("Item not found in inventory or quantity is less than requested.");
+        }
     }
 }
